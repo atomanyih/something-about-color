@@ -19,14 +19,23 @@ function lockColor(e) {
 }
 
 function ColorPicker(context) {
-  var imageData = context.getImageData(0, 0, width, height);
 
   return {
     render: function() {
       context.clearRect(0,0,width,height);
-      context.lineWidth = 1;
-      context.strokeStyle = new Color(0,0,0,128).toString();
-      context.strokeRect(clickedX - 1, clickedY - 1, 2, 2);
+      var image = new PixelCanvas(context);
+
+      for (var x = 0; x < width; x++) {
+        for (var y = 0; y < height; y++) {
+
+          if(x == clickedX || y == clickedY) {
+            var color = new Color(0, 0, 0, 0.5);
+            image.fillPixel(x, y, color);
+          }
+        }
+      }
+
+      image.render();
     }
   }
 }

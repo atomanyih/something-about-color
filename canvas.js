@@ -20,7 +20,6 @@ function PixelCanvas(context) {
     },
     render: function () {
       context.putImageData(imageData, 0, 0)
-
     }
   }
 }
