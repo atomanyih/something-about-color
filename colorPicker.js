@@ -2,13 +2,16 @@ var locked = false;
 var colorPickerCanvas = document.getElementById('colorPicker');
 
 function ColorPicker(canvas, afterChooseFn) {
+  var offsetX = canvas.getBoundingClientRect().left;
+  var offsetY = canvas.getBoundingClientRect().top;
+
   var canvas = new PixelCanvas(canvas);
 
   return {
     moveTo: function(e) {
       if (!locked) {
-        this.clickedX = e.clientX;
-        this.clickedY = e.clientY;
+        this.clickedX = e.x - offsetX;
+        this.clickedY = e.y - offsetY;
         afterChooseFn();
       }
     },
