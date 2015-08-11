@@ -6,6 +6,7 @@ var height = canvas.height;
 var image = new PixelCanvas(context);
 var clickedX = 0;
 var clickedY = 0;
+var locked = false;
 
 var canvasRect = canvas.getBoundingClientRect();
 
@@ -53,13 +54,20 @@ function drawCanvas(colorFn) {
 function rerender() {
   var colorFn = labToRGBA;
   drawCanvas(colorFn);
-  document.getElementById('color').innerText = colorFn(slider.value)(clickedX / width, (height - clickedY - 1) / height).toString();
+  document.getElementById('color').innerText = colorFn(slider.value)(clickedX / width, (height - clickedY - 1) / height).toHexString();
 }
 
 rerender();
 
-function onClick(e) {
-  clickedX = e.x - offsetX;
-  clickedY = e.y - offsetY;
-  rerender();
+function moveTo(e) {
+  if(!locked) {
+    clickedX = e.x - offsetX;
+    clickedY = e.y - offsetY;
+    rerender();
+  }
+}
+
+function lockColor(e) {
+  locked = !locked;
+  moveTo(e);
 }

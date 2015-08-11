@@ -7,7 +7,7 @@
 
 </head>
 <body>
-<canvas id="canvas" width="255" height="255" onclick="onClick(event)"></canvas>
+<canvas id="canvas" width="255" height="255" onmousemove="moveTo(event)" onclick="lockColor(event)"></canvas>
 <div>
   <input id="slider" type="range" value="0" min="0" max="1" step="0.01" oninput="rerender()">
 
