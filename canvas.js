@@ -104,8 +104,11 @@ var isMouseDown = function() {
 function canvasMouseMove(e) {
   if (isMouseDown()) {
     canvas.moveCrosshairs(canvas.getLocalCoords([e.x, e.y]));
-    rerender();
   }
+}
+
+function sliderChange(value) {
+  rerenderWithoutSlider(value);
 }
 
 function setNewColorFunction(newValue) {
@@ -129,4 +132,7 @@ function setNewColorFunction(newValue) {
   canvas.setColorFunction(newColorFunction);
   sliderCanvas.setColorFunction(newColorFunction);
 }
+
+
+
 

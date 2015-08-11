@@ -15,10 +15,10 @@
   </select>
 </div>
 <div id="canvasContainer">
-  <canvas id="canvas" width="255" height="255" onmousemove="canvasMouseMove(event)" onmousemove="canvasMouseClick(event)" draggable="false"></canvas>
+  <canvas id="canvas" width="255" height="255" onmousemove="canvasMouseMove(event); rerenderWithoutColorSpace();" draggable="false"></canvas>
 </div>
 <div>
-  <input id="slider" type="range" value="0" min="0" max="1" step="0.01" oninput="rerender()">
+  <input id="slider" type="range" value="0" min="0" max="1" step="0.01" oninput="sliderChange(this.value)">
 </div>
 <div>
   <canvas id="sliderCanvas" width="255" height="20"></canvas>
