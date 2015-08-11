@@ -12,7 +12,7 @@ function Color(red, green, blue, alpha) {
 
 function RGB(z) {
   return function(x,y) {
-    return new Color(x, y, z);
+    return new Color(x, y, z, 255);
   };
 }
 
@@ -50,8 +50,52 @@ function XYZ(x, y, z) {
       if (R < 0 || G < 0 || B < 0 || R > 255 || G > 255 || B > 255) {
         return new Color(0, 0, 0, 0);
       } else {
-        return new Color(R, G, B, 1);
+        return new Color(R, G, B, 255);
       }
+    }
+  }
+}
+
+function Lab(l, a, b) {
+  return {
+    toXYZ: function() {
+      var_L = l * 100
+      var_A = (a - 0.5) * 200;
+      var_B = (b - 0.5) * 200;
+
+      var_Y = ( var_L + 16 ) / 116;
+      var_X = var_A / 500 + var_Y;
+      var_Z = var_Y - var_B / 200;
+
+      if ( Math.pow(var_Y, 3) > 0.008856 ){
+        var_Y = Math.pow(var_Y, 3);
+      } else {
+        var_Y = ( var_Y - 16 / 116 ) / 7.787;
+      }
+      if ( Math.pow(var_X, 3) > 0.008856 ) {
+        var_X = Math.pow(var_X, 3);
+      } else {
+        var_X = ( var_X - 16 / 116 ) / 7.787;
+      }
+      if ( Math.pow(var_Z, 3) > 0.008856 ) {
+        var_Z = Math.pow(var_Z, 3);
+      }
+      else {
+        var_Z = ( var_Z - 16 / 116 ) / 7.787;
+      }
+
+      ref_X = 95.047 / 100;
+      ref_Y = 100 / 100;
+      ref_Z = 108.883 / 100;
+
+      X = ref_X * var_X;     //ref_X =  95.047     Observer= 2°, Illuminant= D65
+      Y = ref_Y * var_Y;     //ref_Y = 100.000
+      Z = ref_Z * var_Z;     //ref_Z = 108.883
+
+      return new XYZ(X, Y, Z);
+    },
+    toRGB: function() {
+      return this.toXYZ().toRGB();
     }
   }
 }
@@ -59,5 +103,11 @@ function XYZ(x, y, z) {
 var xyzToRGBA = function(y) {
   return function(x, z) {
     return new XYZ(x, y, z).toRGB();
+  }
+};
+
+var labToRGBA = function(L) {
+  return function(a, b) {
+    return new Lab(L, a, b).toRGB();
   }
 };
