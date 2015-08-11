@@ -1,15 +1,16 @@
 var slider = document.getElementById('slider');
 
-var canvas = new PixelCanvas(document.getElementById('canvas'));
+var canvas = new PixelCanvas(document.getElementById('canvas'), labToRGBA);
 
-function PixelCanvas(canvasElement) {
+function PixelCanvas(canvasElement, colorFn) {
   var context = canvasElement.getContext('2d');
   var width = canvasElement.width;
   var height = canvasElement.height;
   var image = context.getImageData(0, 0, width, height);
-  var crosshairsPosition = null;
+  var crosshairsPosition = [0,0];
 
   return {
+    colorFn: colorFn,
     width: width,
     height: height,
     fillPixel: function(x, y, color) {
@@ -19,6 +20,20 @@ function PixelCanvas(canvasElement) {
       image.data[index + 2] = color.blue;
       image.data[index + 3] = color.alpha * 255;
     },
+    drawColorSpace: function(value) {
+      innerColorFn = this.colorFn(value);
+      for (var x = 0; x < canvas.width; x++) {
+        for (var y = 0; y < canvas.height; y++) {
+          var color = innerColorFn(x / canvas.width, (canvas.height - y - 1) / canvas.height);
+
+          canvas.fillPixel(x, y, color);
+        }
+      }
+    },
+    colorAt: function(value, position) {
+      innerColorFn = this.colorFn(value);
+      return innerColorFn(position[0], position[1]);
+    },
     moveCrosshairs: function(newPosition) {
       crosshairsPosition = newPosition;
     },
@@ -26,9 +41,9 @@ function PixelCanvas(canvasElement) {
       return crosshairsPosition;
     },
     getCrosshairsPositionNormalized: function() {
-      return [crosshairsPosition[0] / width, height - 1 - crosshairsPosition[1] / height];
+      return [crosshairsPosition[0] / width, (height - 1 - crosshairsPosition[1]) / height];
     },
-    render: function (renderFn) {
+    render: function() {
       context.putImageData(image, 0, 0);
       if (crosshairsPosition != null) {
         context.beginPath();
@@ -43,22 +58,19 @@ function PixelCanvas(canvasElement) {
       localX = screenCoords[0] - canvasElement.getBoundingClientRect().left;
       localY = screenCoords[1] - canvasElement.getBoundingClientRect().top;
       return [localX, localY];
+    },
+    getCurrentColor: function(value) {
+      return this.colorAt(value,  this.getCrosshairsPositionNormalized());
     }
   }
 }
 
-function drawCanvas(colorFn) {
-  var z = slider.value;
-  for (var x = 0; x < canvas.width; x++) {
-    for (var y = 0; y < canvas.height; y++) {
-
-      var color = colorFn(z)(x / canvas.width, (canvas.height - y - 1) / canvas.height);
-
-      canvas.fillPixel(x, y, color);
-    }
-  }
+function canvasMouseMove(e) {
+  canvas.moveCrosshairs(canvas.getLocalCoords([e.x, e.y]));
+  rerender();
 }
-var sliderCanvas = new PixelCanvas(document.getElementById('sliderCanvas'));
+
+var sliderCanvas = new PixelCanvas(document.getElementById('sliderCanvas'), labToRGBA);
 
 function drawSliderCanvas(colorFn) {
   sliderCanvas.render(function(image) {

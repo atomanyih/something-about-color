@@ -61,9 +61,6 @@ function XYZ(x, y, z) {
       G = Math.floor(var_G * 255);
       B = Math.floor(var_B * 255);
 
-      R = Math.max(0, Math.min(R, 255));
-      G = Math.max(0, Math.min(G, 255));
-      B = Math.max(0, Math.min(B, 255));
       if (R < 0 || G < 0 || B < 0 || R > 255 || G > 255 || B > 255) {
         return new Color(0, 0, 0, 0);
       } else {
