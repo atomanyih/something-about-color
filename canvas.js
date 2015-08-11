@@ -1,7 +1,7 @@
 var slider = document.getElementById('slider');
 
 var canvas = new PixelCanvas(document.getElementById('canvas'), labToRGBA);
-var sliderCanvas = new PixelCanvas(document.getElementById('sliderCanvas'), labToRGBA);
+var sliderCanvas = new PixelCanvas(document.getElementById('sliderCanvas'), labToRGBA).disableCrosshairs();
 
 function PixelCanvas(canvasElement, colorFn) {
   var context = canvasElement.getContext('2d');
@@ -9,11 +9,21 @@ function PixelCanvas(canvasElement, colorFn) {
   var height = canvasElement.height;
   var image = context.getImageData(0, 0, width, height);
   var crosshairsPosition = [0,0];
+  var crosshairsEnabled = true;
 
   return {
     colorFn: colorFn,
     width: width,
     height: height,
+    crosshairsEnabled: crosshairsEnabled,
+    disableCrosshairs: function() {
+      crosshairsEnabled = false;
+      return this;
+    },
+    enableCrosshairs: function() {
+      crosshairsEnabled = true;
+      return this;
+    },
     fillPixel: function(x, y, color) {
       var index = (y * width + x) * 4;
       image.data[index] = color.red;
@@ -54,7 +64,7 @@ function PixelCanvas(canvasElement, colorFn) {
     },
     render: function() {
       context.putImageData(image, 0, 0);
-      if (crosshairsPosition != null) {
+      if (crosshairsEnabled) {
         context.beginPath();
         context.moveTo(0, crosshairsPosition[1]);
         context.lineTo(width, crosshairsPosition[1]);
