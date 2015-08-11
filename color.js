@@ -1,7 +1,11 @@
 function Color(red, green, blue, alpha) {
   return {
+    red: red,
+    green: green,
+    blue: blue,
+    alpha: alpha,
     toString: function () {
-      return 'rgba(' + [red, green, blue, alpha].join(',') + ')';
+      return 'rgba(' + [this.red, this.green, this.blue, this.alpha].join(',') + ')';
     }
   }
 }
