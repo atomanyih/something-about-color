@@ -1,6 +1,3 @@
-var context = document.getElementById('canvas').getContext('2d');
-var slider = document.getElementById('slider');
-
 function Color(red, green, blue, alpha) {
   return {
     toString: function () {
@@ -9,7 +6,7 @@ function Color(red, green, blue, alpha) {
   }
 }
 
-function colorFunction(z) {
+function RGB(z) {
   return function(x,y) {
     return new Color(x, y, z);
   };
@@ -57,25 +54,3 @@ var xyzToRGB = function(x, y, z) {
   }
 
 };
-
-
-function drawPixel(position, color) {
-  context.fillStyle = color.toString();
-  context.fillRect(position.x, position.y, 1, 1);
-}
-
-function drawCanvas() {
-  var z = slider.value;
-
-  for (var x = 0; x < 256; x++) {
-    for (var y = 0; y < 256; y++) {
-
-      var otherColorFunction = xyzToRGBA(z);
-      var color = otherColorFunction(x / 256,y / 256);
-
-      drawPixel({x: x, y: y}, color);
-    }
-  }
-}
-
-drawCanvas();
