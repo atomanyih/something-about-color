@@ -1,7 +1,7 @@
 var slider = document.getElementById('slider');
 
-var canvas = new PixelCanvas(document.getElementById('canvas'), labToRGBA);
-var sliderCanvas = new PixelCanvas(document.getElementById('sliderCanvas'), labToRGBA).disableCrosshairs();
+var canvas = new PixelCanvas(document.getElementById('canvas'), hsvToRGBA);
+var sliderCanvas = new PixelCanvas(document.getElementById('sliderCanvas'), hsvToRGBA).disableCrosshairs();
 
 function PixelCanvas(canvasElement, colorFn) {
   var context = canvasElement.getContext('2d');

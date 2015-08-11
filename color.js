@@ -163,7 +163,7 @@ var labToRGBA = function(L) {
   }
 };
 
-var hsvtoRGBA = function(v) {
+var hsvToRGBA = function(v) {
   return function(h, s) {
     return new HSV(h, s, v).toRGB();
   }
