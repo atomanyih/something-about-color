@@ -22,15 +22,14 @@ function PixelCanvas(context) {
   }
 }
 
-function drawCanvas() {
+function drawCanvas(colorFn) {
   var z = slider.value;
 
   for (var x = 0; x < width; x++) {
     for (var y = 0; y < height; y++) {
 
 
-      var otherColorFunction = xyzToRGBA(z);
-      var color = otherColorFunction(x / width, y / height);
+      var color = colorFn(z)(x / width, y / height);
 
 
       image.fillPixel(x, y, color);
@@ -40,4 +39,4 @@ function drawCanvas() {
   image.render();
 }
 
-drawCanvas();
+drawCanvas(xyzToRGBA);
