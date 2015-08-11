@@ -74,9 +74,23 @@ function PixelCanvas(canvasElement, colorFn) {
   }
 }
 
+var mouseDown = 0;
+document.body.onmousedown = function() {
+  ++mouseDown;
+}
+document.body.onmouseup = function() {
+  --mouseDown;
+};
+
+var isMouseDown = function() {
+  return mouseDown > 0;
+};
+
 function canvasMouseMove(e) {
-  canvas.moveCrosshairs(canvas.getLocalCoords([e.x, e.y]));
-  rerender();
+  if (isMouseDown()) {
+    canvas.moveCrosshairs(canvas.getLocalCoords([e.x, e.y]));
+    rerender();
+  }
 }
 
 
