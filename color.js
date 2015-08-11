@@ -151,8 +151,8 @@ function HSV(H,S,V) {
   }
 }
 
-var xyzToRGBA = function(y) {
-  return function(x, z) {
+var xyzToRGBA = function(z) {
+  return function(x, y) {
     return new XYZ(x, y, z).toRGB();
   }
 };
