@@ -1,7 +1,8 @@
 function rerender() {
   var colorFn = labToRGBA;
   drawCanvas(colorFn);
-  colorPicker.render();
+  canvas.render();
+  //colorPicker.render();
   var colorDisplay = document.getElementById('color');
   var currentColor = colorFn(slider.value)(
     colorPicker.getNormalizedX(), colorPicker.getNormalizedY()
