@@ -28,7 +28,7 @@ function drawCanvas(colorFn) {
   for (var x = 0; x < width; x++) {
     for (var y = 0; y < height; y++) {
 
-      var color = colorFn(z)(x / width, y / height);
+      var color = colorFn(z)(x / width, (height - y - 1) / height);
 
 
       image.fillPixel(x, y, color);
