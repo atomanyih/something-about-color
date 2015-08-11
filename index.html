@@ -8,17 +8,17 @@
 </head>
 <body>
 <div id="colorFnContainer">
-  <select id="colorFnPicker" onchange="setNewColorFunction(this.value); rerender()">
+  <select id="colorFnPicker" onchange="updateColorFunction()">
     <option value="lab">CIE*Lab</option>
     <option value="hsv">HSV</option>
     <option value="xyz">XYZ</option>
   </select>
 </div>
 <div id="canvasContainer">
-  <canvas id="canvas" width="255" height="255" onmousemove="canvasMouseMove(event); rerenderWithoutColorSpace();" draggable="false"></canvas>
+  <canvas id="canvas" width="255" height="255" onmousemove="moveMouse(event)" draggable="false"></canvas>
 </div>
 <div>
-  <input id="slider" type="range" value="0" min="0" max="1" step="0.01" oninput="sliderChange(this.value)">
+  <input id="slider" type="range" value="0" min="0" max="1" step="0.01" oninput="updateSliderValue()">
 </div>
 <div>
   <canvas id="sliderCanvas" width="255" height="20"></canvas>
@@ -29,5 +29,39 @@
 <script src="color.js"></script>
 <script src="canvas.js"></script>
 <script src="render.js"></script>
+<script src="app.js"></script>
+<script src="color_swatch.js"></script>
+<script>
+  var slider = document.getElementById('slider');
+
+  var canvas = document.getElementById('canvas');
+  var sliderCanvas = document.getElementById('sliderCanvas');
+
+  var colorFunctionPicker = document.getElementById('colorFnPicker');
+
+  var colorDisplay = document.getElementById('color');
+
+  var app = new App(canvas, sliderCanvas, slider, colorFunctionPicker, colorDisplay);
+
+  function updateColorFunction() {
+    app.updateColorFunction();
+    app.render();
+  }
+
+  function moveMouse(e) {
+    app.moveMouse(e);
+    app.render();
+  }
+
+  function updateSliderValue() {
+    app.updateSliderValue();
+    app.render();
+  }
+
+  function updateColorFunction() {
+    app.updateColorFunction();
+    app.render();
+  }
+</script>
 </body>
 </html>

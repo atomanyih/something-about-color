@@ -1,19 +1,12 @@
-var slider = document.getElementById('slider');
-
-var canvas = new PixelCanvas(document.getElementById('canvas'), labToRGBA);
-var sliderCanvas = new PixelCanvas(document.getElementById('sliderCanvas'), labToRGBA).disableCrosshairs();
-
-function PixelCanvas(canvasElement, colorFunctionArg) {
+function PixelCanvas(canvasElement) {
   var context = canvasElement.getContext('2d');
   var width = canvasElement.width;
   var height = canvasElement.height;
   var image = context.getImageData(0, 0, width, height);
   var crosshairsPosition = [0,0];
   var crosshairsEnabled = true;
-  var colorFunction = colorFunctionArg;
 
   return {
-    colorFn: colorFunction,
     width: width,
     height: height,
     crosshairsEnabled: crosshairsEnabled,
@@ -25,10 +18,6 @@ function PixelCanvas(canvasElement, colorFunctionArg) {
       this.crosshairsEnabled = true;
       return this;
     },
-    setColorFunction: function(newColorFunction) {
-      this.colorFn = newColorFunction;
-      return this;
-    },
     fillPixel: function(x, y, color) {
       var index = (y * width + x) * 4;
       image.data[index] = color.red;
@@ -36,8 +25,8 @@ function PixelCanvas(canvasElement, colorFunctionArg) {
       image.data[index + 2] = color.blue;
       image.data[index + 3] = color.alpha * 255;
     },
-    drawColorSpace: function(value) {
-      innerColorFn = this.colorFn(value);
+    drawColorSpace: function(value, colorFn) {
+      innerColorFn = colorFn(value);
       for (var x = 0; x < this.width; x++) {
         for (var y = 0; y < this.height; y++) {
           var color = innerColorFn(x / this.width, (this.height - y - 1) / this.height);
@@ -46,35 +35,33 @@ function PixelCanvas(canvasElement, colorFunctionArg) {
         }
       }
     },
-    drawColorLine: function(position) {
+    drawColorLine: function(position, colorFn) {
       for (var x = 0; x < this.width; x++) {
-        var color = this.colorAt(x / this.width, position);
+        var color = this.colorAt(x / this.width, position, colorFn);
         for (var y = 0; y < this.height; y++) {
           this.fillPixel(x, y, color);
         }
       }
     },
-    colorAt: function(value, position) {
-      innerColorFn = this.colorFn(value);
+    colorAt: function(value, position, colorFn) {
+      innerColorFn = colorFn(value);
       return innerColorFn(position[0], position[1]);
     },
+    crosshairsPosition: crosshairsPosition,
     moveCrosshairs: function(newPosition) {
-      crosshairsPosition = newPosition;
-    },
-    getCrosshairsPosition: function() {
-      return crosshairsPosition;
+      this.crosshairsPosition = newPosition;
     },
     getCrosshairsPositionNormalized: function() {
-      return [crosshairsPosition[0] / width, (height - 1 - crosshairsPosition[1]) / height];
+      return [this.crosshairsPosition[0] / width, (height - 1 - this.crosshairsPosition[1]) / height];
     },
     render: function() {
       context.putImageData(image, 0, 0);
-      if (crosshairsEnabled) {
+      if (this.crosshairsEnabled) {
         context.beginPath();
-        context.moveTo(0, crosshairsPosition[1]);
-        context.lineTo(width, crosshairsPosition[1]);
-        context.moveTo(crosshairsPosition[0], 0);
-        context.lineTo(crosshairsPosition[0], height);
+        context.moveTo(0, this.crosshairsPosition[1]);
+        context.lineTo(width, this.crosshairsPosition[1]);
+        context.moveTo(this.crosshairsPosition[0], 0);
+        context.lineTo(this.crosshairsPosition[0], height);
         context.stroke();
       }
     },
@@ -83,8 +70,8 @@ function PixelCanvas(canvasElement, colorFunctionArg) {
       localY = screenCoords[1] - canvasElement.getBoundingClientRect().top;
       return [localX, localY];
     },
-    getCurrentColor: function(value) {
-      return this.colorAt(value,  this.getCrosshairsPositionNormalized());
+    getCurrentColor: function(value, colorFn) {
+      return this.colorAt(value, this.getCrosshairsPositionNormalized(), colorFn);
     }
   }
 }
@@ -100,39 +87,5 @@ document.body.onmouseup = function() {
 var isMouseDown = function() {
   return mouseDown > 0;
 };
-
-function canvasMouseMove(e) {
-  if (isMouseDown()) {
-    canvas.moveCrosshairs(canvas.getLocalCoords([e.x, e.y]));
-  }
-}
-
-function sliderChange(value) {
-  rerenderWithoutSlider(value);
-}
-
-function setNewColorFunction(newValue) {
-  newColorFunction = canvas.colorFn;
-  switch (newValue) {
-    case "lab":
-      newColorFunction = labToRGBA;
-      break;
-
-    case "hsv":
-      newColorFunction = hsvToRGBA;
-      break;
-
-    case "xyz":
-      newColorFunction = xyzToRGBA;
-      break;
-
-    default:
-      break;
-  }
-  canvas.setColorFunction(newColorFunction);
-  sliderCanvas.setColorFunction(newColorFunction);
-}
-
-
 
 
