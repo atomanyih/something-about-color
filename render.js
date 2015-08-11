@@ -6,9 +6,11 @@ function rerender() {
     colorPicker.getNormalizedX(), colorPicker.getNormalizedY()
   ).toHexString();
 
-  rerenderSliderCanvas(
-    colorPicker.getNormalizedX(), colorPicker.getNormalizedY()
-  );
+  drawSliderCanvas(function (L) {
+    return colorFn(L)(
+      colorPicker.getNormalizedX(), colorPicker.getNormalizedY()
+    );
+  });
 }
 
 rerender();
