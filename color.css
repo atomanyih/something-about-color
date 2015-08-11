@@ -4,6 +4,9 @@
 
 #color {
   font-family: monospace;
+  color: white;
+  width: 255px;
+  padding: 0.5em;
 }
 
 #colorPicker {
