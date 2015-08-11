@@ -1,43 +1,47 @@
-var clickedX = 0;
-var clickedY = 0;
 var locked = false;
-var offsetX = canvasRect.left;
-var offsetY = canvasRect.top;
-var colorPickerContext = document.getElementById('colorPicker').getContext('2d');
+var colorPickerCanvas = document.getElementById('colorPicker');
 
-function ColorPicker(context, afterChooseFn) {
+function ColorPicker(canvas, afterChooseFn) {
+  var canvas = new PixelCanvas(canvas);
 
   return {
-    moveTo: function (e) {
+    moveTo: function(e) {
       if (!locked) {
-        clickedX = e.x - offsetX;
-        clickedY = e.y - offsetY;
+        this.clickedX = e.clientX;
+        this.clickedY = e.clientY;
         afterChooseFn();
       }
     },
-    lockColor: function (e) {
+    lockColor: function(e) {
       locked = !locked;
       this.moveTo(e);
     },
-    render: function () {
-      context.clearRect(0, 0, width, height);
-      var image = new PixelCanvas(context);
+    render: function() {
+      var self = this;
 
-      for (var x = 0; x < width; x++) {
-        for (var y = 0; y < height; y++) {
+      canvas.render(function(image) {
+        for (var x = 0; x < canvas.width; x++) {
+          for (var y = 0; y < canvas.height; y++) {
 
-          if (x == clickedX || y == clickedY) {
-            var color = new Color(0, 0, 0, 0.5);
-            image.fillPixel(x, y, color);
+            if (x == self.clickedX || y == self.clickedY) {
+              var color = new Color(0, 0, 0, 0.5);
+              image.fillPixel(x, y, color);
+            } else {
+              image.fillPixel(x, y, new Color(0, 0, 0, 0))
+            }
           }
         }
-      }
-
-      image.render();
+      });
+    },
+    getNormalizedX: function() {
+      return this.clickedX / canvas.width;
+    },
+    getNormalizedY: function() {
+      return (canvas.height - this.clickedY - 1) / canvas.height;
     }
   }
 }
 
-var colorPicker = new ColorPicker(colorPickerContext, function() {
-  rerender()
+var colorPicker = new ColorPicker(colorPickerCanvas, function() {
+  rerender();
 });

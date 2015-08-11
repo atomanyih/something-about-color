@@ -2,7 +2,13 @@ function rerender() {
   var colorFn = labToRGBA;
   drawCanvas(colorFn);
   colorPicker.render();
-  document.getElementById('color').innerText = colorFn(slider.value)(clickedX / width, (height - clickedY - 1) / height).toHexString();
+  document.getElementById('color').innerText = colorFn(slider.value)(
+    colorPicker.getNormalizedX(), colorPicker.getNormalizedY()
+  ).toHexString();
+
+  rerenderSliderCanvas(
+    colorPicker.getNormalizedX(), colorPicker.getNormalizedY()
+  );
 }
 
 rerender();
