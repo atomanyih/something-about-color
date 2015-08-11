@@ -18,10 +18,13 @@ function RGB(z) {
 
 function XYZ(x, y, z) {
   return {
+    x: x,
+    y: y,
+    z: z,
     toRGB: function() {
-      var_X = x; /// 100        //X from 0 to  95.047      (Observer = 2°, Illuminant = D65)
-      var_Y = y; /// 100        //Y from 0 to 100.000
-      var_Z = z; /// 100        //Z from 0 to 108.883
+      var_X = this.x; /// 100        //X from 0 to  95.047      (Observer = 2°, Illuminant = D65)
+      var_Y = this.y; /// 100        //Y from 0 to 100.000
+      var_Z = this.z; /// 100        //Z from 0 to 108.883
 
       var_R = var_X *  3.2406 + var_Y * -1.5372 + var_Z * -0.4986;
       var_G = var_X * -0.9689 + var_Y *  1.8758 + var_Z *  0.0415;
@@ -58,10 +61,16 @@ function XYZ(x, y, z) {
 
 function Lab(l, a, b) {
   return {
+    l: l,
+    a: a,
+    b: b,
+    ref_x: 95.047 / 100,
+    ref_y:100 / 100,
+    ref_z: 108.883 / 100,
     toXYZ: function() {
-      var_L = l * 100
-      var_A = (a - 0.5) * 200;
-      var_B = (b - 0.5) * 200;
+      var_L = this.l * 100
+      var_A = (this.a - 0.5) * 256;
+      var_B = (this.b - 0.5) * 256;
 
       var_Y = ( var_L + 16 ) / 116;
       var_X = var_A / 500 + var_Y;
@@ -84,13 +93,9 @@ function Lab(l, a, b) {
         var_Z = ( var_Z - 16 / 116 ) / 7.787;
       }
 
-      ref_X = 95.047 / 100;
-      ref_Y = 100 / 100;
-      ref_Z = 108.883 / 100;
-
-      X = ref_X * var_X;     //ref_X =  95.047     Observer= 2°, Illuminant= D65
-      Y = ref_Y * var_Y;     //ref_Y = 100.000
-      Z = ref_Z * var_Z;     //ref_Z = 108.883
+      X = this.ref_x * var_X;     //ref_X =  95.047     Observer= 2°, Illuminant= D65
+      Y = this.ref_y * var_Y;     //ref_Y = 100.000
+      Z = this.ref_z * var_Z;     //ref_Z = 108.883
 
       return new XYZ(X, Y, Z);
     },
