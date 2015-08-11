@@ -1,6 +1,7 @@
 var slider = document.getElementById('slider');
 
 var canvas = new PixelCanvas(document.getElementById('canvas'), labToRGBA);
+var sliderCanvas = new PixelCanvas(document.getElementById('sliderCanvas'), labToRGBA);
 
 function PixelCanvas(canvasElement, colorFn) {
   var context = canvasElement.getContext('2d');
@@ -22,11 +23,19 @@ function PixelCanvas(canvasElement, colorFn) {
     },
     drawColorSpace: function(value) {
       innerColorFn = this.colorFn(value);
-      for (var x = 0; x < canvas.width; x++) {
-        for (var y = 0; y < canvas.height; y++) {
-          var color = innerColorFn(x / canvas.width, (canvas.height - y - 1) / canvas.height);
+      for (var x = 0; x < this.width; x++) {
+        for (var y = 0; y < this.height; y++) {
+          var color = innerColorFn(x / this.width, (this.height - y - 1) / this.height);
 
-          canvas.fillPixel(x, y, color);
+          this.fillPixel(x, y, color);
+        }
+      }
+    },
+    drawColorLine: function(position) {
+      for (var x = 0; x < this.width; x++) {
+        var color = this.colorAt(x / this.width, position);
+        for (var y = 0; y < this.height; y++) {
+          this.fillPixel(x, y, color);
         }
       }
     },
@@ -70,22 +79,5 @@ function canvasMouseMove(e) {
   rerender();
 }
 
-var sliderCanvas = new PixelCanvas(document.getElementById('sliderCanvas'), labToRGBA);
 
-function drawSliderCanvas(colorFn) {
-  sliderCanvas.render(function(image) {
-    for (var x = 0; x < sliderCanvas.width; x++) {
-      var color = colorFn(x / sliderCanvas.width);
-      for (var y = 0; y < sliderCanvas.height; y++) {
-        image.fillPixel(x, y, color);
-      }
-    }
-  });
-}
-
-function rerenderSliderCanvas(a,b) {
-  drawSliderCanvas(function(L) {
-    return new Lab(L, a, b).toRGB();
-  });
-}
 

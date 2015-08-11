@@ -1,7 +1,8 @@
 function rerender() {
   canvas.drawColorSpace(slider.value);
   canvas.render();
-  //colorPicker.render();
+  sliderCanvas.drawColorLine(canvas.getCrosshairsPositionNormalized());
+  sliderCanvas.render();
   var colorDisplay = document.getElementById('color');
   var currentColor = canvas.getCurrentColor(slider.value);
   var currentColorHex = currentColor.toHexString();
