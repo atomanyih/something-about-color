@@ -5,30 +5,28 @@ var offsetX = canvasRect.left;
 var offsetY = canvasRect.top;
 var colorPickerContext = document.getElementById('colorPicker').getContext('2d');
 
-function moveTo(e) {
-  if(!locked) {
-    clickedX = e.x - offsetX;
-    clickedY = e.y - offsetY;
-    rerender();
-  }
-}
-
-function lockColor(e) {
-  locked = !locked;
-  moveTo(e);
-}
-
-function ColorPicker(context) {
+function ColorPicker(context, afterChooseFn) {
 
   return {
-    render: function() {
-      context.clearRect(0,0,width,height);
+    moveTo: function (e) {
+      if (!locked) {
+        clickedX = e.x - offsetX;
+        clickedY = e.y - offsetY;
+        afterChooseFn();
+      }
+    },
+    lockColor: function (e) {
+      locked = !locked;
+      this.moveTo(e);
+    },
+    render: function () {
+      context.clearRect(0, 0, width, height);
       var image = new PixelCanvas(context);
 
       for (var x = 0; x < width; x++) {
         for (var y = 0; y < height; y++) {
 
-          if(x == clickedX || y == clickedY) {
+          if (x == clickedX || y == clickedY) {
             var color = new Color(0, 0, 0, 0.5);
             image.fillPixel(x, y, color);
           }
@@ -40,4 +38,6 @@ function ColorPicker(context) {
   }
 }
 
-var colorPicker = new ColorPicker(colorPickerContext);
+var colorPicker = new ColorPicker(colorPickerContext, function() {
+  rerender()
+});

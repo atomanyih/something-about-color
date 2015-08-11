@@ -9,7 +9,7 @@
 <body>
 <div id="canvasContainer">
   <canvas id="canvas" width="255" height="255"></canvas>
-  <canvas id="colorPicker" width="255" height="255" onmousemove="moveTo(event)" onclick="lockColor(event)"></canvas>
+  <canvas id="colorPicker" width="255" height="255" onmousemove="colorPicker.moveTo(event)" onclick="colorPicker.lockColor(event)"></canvas>
 </div>
 <div>
   <input id="slider" type="range" value="0" min="0" max="1" step="0.01" oninput="rerender()">
