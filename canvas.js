@@ -38,4 +38,8 @@ function drawCanvas(colorFn) {
   image.render();
 }
 
-drawCanvas(labToRGBA);
+function rerender() {
+  drawCanvas(labToRGBA);
+}
+
+rerender();
