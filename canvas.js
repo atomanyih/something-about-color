@@ -1,7 +1,8 @@
-var context = document.getElementById('canvas').getContext('2d');
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
 var slider = document.getElementById('slider');
-var width = 256;
-var height = 256;
+var width = canvas.width;
+var height = canvas.height;
 var image = new PixelCanvas(context);
 
 function PixelCanvas(context) {
